@@ -73,17 +73,8 @@ FREESURFER_ID=$(basename ${FREESURFER_RECON})
 # Check the output directory exists or create it
 if [ $# < 3 ] ; then
     DESTINATION_DIR=${PET_RECON_DIR}/pet-to-standard
-    if !([ -d "$DESTINATION_DIR" ]); then
-        mkdir $DESTINATION_DIR
-    fi
 else
     DESTINATION_DIR=$3
-    if !([ -d "$DESTINATION_DIR" ]); then
-        echo "Cannot find destination directory $DESTINATION_DIR."
-        echo
-        usage $SCRIPT_NAME
-        exit 1
-    fi
 fi
 
 # Make dir for this subject, copy the nifti file there, and move to that directory
@@ -160,5 +151,6 @@ fslmaths ${PET_RECON}.nl_MNI152_norm -kernel gauss 2.55 -fmean ${PET_RECON}.nl_M
 # Normalization and smoothing of lin_T1_orientOK_skullstripped
 fslmaths ${PET_RECON}.lin_T1_orientOK_skullstripped -mas aparc+aseg_BIN-2mm_orientOK -inm 1 ${PET_RECON}.lin_T1_orientOK_skullstripped_norm -odt float
 fslmaths ${PET_RECON}.lin_T1_orientOK_skullstripped_norm -kernel gauss 2.55 -fmean ${PET_RECON}.lin_T1_orientOK_skullstripped_norm_sm6mm -odt float
-echo "All done!"
+
+# All done!
 echo "Transformed PET image stored in ${DESTINATION_DIR}/${PET_RECON}.nii"
