@@ -17,6 +17,7 @@ usage()
     echo "       pet_recon                  the reconstructed PET nifty file"
     echo "       fs_recon_dir               the directory with the Freesurfer reconstruction"
     echo "       dest_dir                   a directory to store the transformed image"
+    echo "       -f                         do not check the registration"
     echo "       -h                         prints this text"
     echo
     echo "By default, dest_dir is a pet-to-standard directory inside the directory where the" 
@@ -28,10 +29,12 @@ usage()
 
 # Process the options passed to the script
 SCRIPT_NAME=$0
+CHECK_REGISTRATION=1
 
 while getopts ':hn' opt; do
     case "${opt}" in
         h) usage $SCRIPT_NAME; exit 0 ;;
+        f) CHECK_REGISTRATION=0 ;;
         \?) echo "Invalid option"; usage $SCRIPT_NAME; exit 1 ;;
     esac
 done
@@ -92,7 +95,9 @@ cd ${DESTINATION_DIR}
 spmregister --mov ${PET_RECON}.nii --s ${FREESURFER_RECON} --reg SUV.lin_T1.dat --fsvol orig
 
 # to check registration
-tkregister2 --mov ${PET_RECON}.nii --targ ${SUBJECT_DIR}/mri/orig.mgz --reg SUV.lin_T1.dat --surf orig
+if [ $CHECK_REGISTRATION -eq 1 ]; then
+    tkregister2 --mov ${PET_RECON}.nii --targ ${SUBJECT_DIR}/mri/orig.mgz --reg SUV.lin_T1.dat --surf orig
+fi
 
 # Use tkergister to transform the matrix into .mat, and then invert the transformation matrix
 tkregister2 --mov ${PET_RECON}.nii --targ ${SUBJECT_DIR}/mri/brainmask.mgz --reg SUV.lin_T1.dat --fslregout SUV.lin_T1.mat --noedit
