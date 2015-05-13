@@ -26,6 +26,13 @@ usage()
     echo " Example:"
     echo "  ./pet_on_standard.sh ./SCAC_PBR_SUV_60-90.nii /cluster/PBR/FS/subjects/SCAC64H_PBR28"
 }
+get_abspath()
+{
+   (
+   cd $(dirname $1)
+   echo $PWD/$(basename $1)
+   )
+}
 
 # Process the options passed to the script
 SCRIPT_NAME=$0
@@ -69,6 +76,10 @@ if !([ -d "$2" ]); then
 fi
 FREESURFER_RECON=$2
 FREESURFER_ID=$(basename ${FREESURFER_RECON})
+
+#Save the location of the Freesurfer reconstruction
+FS_RECON_MAPFILE=$PET_RECON_DIR/.${PET_RECON%.nii}_fs_recon_map
+echo $(get_abspath $2) > $FS_RECON_MAPFILE
 
 # Check the output directory exists or create it
 if [ $# < 3 ] ; then
