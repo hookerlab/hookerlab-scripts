@@ -4,7 +4,7 @@
 # This is to be used with data acquired on Bay 7, so there's no L/R flip required.
 #
 # Example:
-#       ./pet_on_standard.sh /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28 ./SCAC_PBR_SUV_60-90.nii
+#       ./pet_on_standard.sh ./SCAC_PBR_SUV_60-90.nii /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28
 #
 usage()
 {
@@ -23,7 +23,7 @@ usage()
     echo "original image is."
     echo
     echo " Example:"
-    echo "  ./pet_on_standard.sh /cluster/PBR/FS/subjects/SCAC64H_PBR28 ./SCAC_PBR_SUV_60-90.nii"
+    echo "  ./pet_on_standard.sh ./SCAC_PBR_SUV_60-90.nii /cluster/PBR/FS/subjects/SCAC64H_PBR28"
 }
 
 # Process the options passed to the script
