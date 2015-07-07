@@ -18,6 +18,7 @@ usage()
     echo "       fs_recon_dir               the directory with the Freesurfer reconstruction"
     echo "       dest_dir                   a directory to store the transformed image"
     echo "       -f                         do not check the registration"
+    echo "       -r                         flip left->right (iff scanned on bay 7)
     echo "       -h                         prints this text"
     echo
     echo "By default, dest_dir is a pet-to-standard directory inside the directory where the" 
@@ -37,11 +38,13 @@ get_abspath()
 # Process the options passed to the script
 SCRIPT_NAME=$0
 CHECK_REGISTRATION=1
+SHOULD_FLIP=0 ;;
 
 while getopts ':hn' opt; do
     case "${opt}" in
         h) usage $SCRIPT_NAME; exit 0 ;;
         f) CHECK_REGISTRATION=0 ;;
+        r) SHOULD_FLIP=1 ;;
         \?) echo "Invalid option"; usage $SCRIPT_NAME; exit 1 ;;
     esac
 done
@@ -88,9 +91,13 @@ else
     DESTINATION_DIR=$3
 fi
 
-# Make dir for this subject, copy the nifti file there, and move to that directory
+# Make dir for this subject, copy or flip the nifti file there, and move to that directory
 mkdir -p ${DESTINATION_DIR}
-cp ${PET_RECON_DIR}/${PET_RECON}.nii ${DESTINATION_DIR}/${PET_RECON}.nii
+if [ $SHOULD_FLIP -eq 1 ]; then
+    mri_convert --left-right-reverse-pix ${PET_RECON_DIR}/${PET_RECON}.nii ${DESTINATION_DIR}/${PET_RECON}.nii
+else
+    cp ${PET_RECON_DIR}/${PET_RECON}.nii ${DESTINATION_DIR}/${PET_RECON}.nii
+fi
 cd ${DESTINATION_DIR}
 
 # Compute transformation matrix for linear registration of SUV with fs T1, with spm
