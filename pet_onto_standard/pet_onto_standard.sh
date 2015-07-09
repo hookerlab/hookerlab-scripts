@@ -23,7 +23,7 @@ usage()
     echo "       fs_recon_dir               the directory with the Freesurfer reconstruction"
     echo "       dest_dir                   a directory to store the transformed image"
     echo "       -f                         do not check the registration"
-    echo "       -r                         flip left->right (iff scanned on bay 7)
+    echo "       -r                         flip left->right (iff scanned on bay 7)"
     echo "       -h                         prints this text"
     echo
     echo "By default, dest_dir is a pet-to-standard directory inside the directory where the" 
@@ -46,7 +46,7 @@ get_abspath()
 # Process the options passed to the script
 SCRIPT_NAME=$0
 CHECK_REGISTRATION=1
-SHOULD_FLIP=0 ;;
+SHOULD_FLIP=0
 
 while getopts ':hn' opt; do
     case "${opt}" in
