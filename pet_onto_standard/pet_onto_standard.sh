@@ -3,13 +3,13 @@
 #
 # This can be used with data acquired on Bay 6 and Bay 7.
 #
-# IMPORTANT: Scans from Bay 7 need to be reversed (left to right flip).
+# IMPORTANT: Scans from Bay 6 need to be reversed (left to right flip).
 #          You can do this within the script just by passing the option -r.
 #
 # Example:
-#       bash pet_on_standard.sh scan_from_bay_6.nii /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28
+#       bash pet_on_standard.sh scan_from_bay_7.nii /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28
 #
-#       bash pet_on_standard.sh -r scan_from_bay_7.nii /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28
+#       bash pet_on_standard.sh -r scan_from_bay_6.nii /autofs/cluster/PBR/FS/subjects/SCAC64H_PBR28
 #
 usage()
 {
@@ -23,13 +23,13 @@ usage()
     echo "       fs_recon_dir               the directory with the Freesurfer reconstruction"
     echo "       dest_dir                   a directory to store the transformed image"
     echo "       -f                         do not check the registration"
-    echo "       -r                         flip left->right (iff scanned on bay 7)"
+    echo "       -r                         flip left->right (iff scanned on bay 6)"
     echo "       -h                         prints this text"
     echo
     echo "By default, dest_dir is a pet-to-standard directory inside the directory where the" 
     echo "original image is."
     echo
-    echo "IMPORTANT: Scans from Bay 7 need to be reversed (left to right flip)."
+    echo "IMPORTANT: Scans from Bay 6 need to be reversed (left to right flip)."
     echo "           You can do this within the script just by passing the option -r."
     echo
     echo " Example:"
