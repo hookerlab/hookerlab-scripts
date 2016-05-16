@@ -124,19 +124,19 @@ spmregister --mov ${PET_RECON}.nii --s ${FREESURFER_RECON} --reg SUV.lin_T1.dat 
 
 # to check registration
 if [ $CHECK_REGISTRATION -eq 1 ]; then
-    tkregister2 --mov ${PET_RECON}.nii --targ ${SUBJECT_DIR}/mri/orig.mgz --reg SUV.lin_T1.dat --surf orig
+    tkregister2 --mov ${PET_RECON}.nii --targ ${FREESURFER_RECON}/mri/orig.mgz --reg SUV.lin_T1.dat --surf orig
 fi
 
 # Use tkergister to transform the matrix into .mat, and then invert the transformation matrix
-tkregister2 --mov ${PET_RECON}.nii --targ ${SUBJECT_DIR}/mri/brainmask.mgz --reg SUV.lin_T1.dat --fslregout SUV.lin_T1.mat --noedit
+tkregister2 --mov ${PET_RECON}.nii --targ ${FREESURFER_RECON}/mri/brainmask.mgz --reg SUV.lin_T1.dat --fslregout SUV.lin_T1.mat --noedit
 convert_xfm -omat T1_lin_SUV.mat -inverse SUV.lin_T1.mat
 
 ######################## Apply T1 to SUV registration ##########################
 
 # Convert various files and reorient to standard to match MNI/fsl coordinates system
-mri_convert ${SUBJECT_DIR}/mri/brainmask.mgz brainmask.nii
-mri_convert ${SUBJECT_DIR}/mri/T1.mgz T1.nii
-mri_binarize --i ${SUBJECT_DIR}/mri/aparc+aseg.mgz --min 0.5 --dilate 2 --o aparc+aseg_BIN.nii 
+mri_convert ${FREESURFER_RECON}/mri/brainmask.mgz brainmask.nii
+mri_convert ${FREESURFER_RECON}/mri/T1.mgz T1.nii
+mri_binarize --i ${FREESURFER_RECON}/mri/aparc+aseg.mgz --min 0.5 --dilate 2 --o aparc+aseg_BIN.nii
 3dresample -dxyz 2 2 2 -master brainmask.nii  -inset brainmask.nii -prefix brainmask-2mm.nii
 3dresample -dxyz 2 2 2 -master T1.nii  -inset T1.nii -prefix T1-2mm.nii
 3dresample -dxyz 2 2 2 -master aparc+aseg_BIN.nii  -inset aparc+aseg_BIN.nii -prefix aparc+aseg_BIN-2mm.nii
@@ -157,7 +157,7 @@ fslmaths ${PET_RECON}.lin_T1_orientOK -mas aparc+aseg_BIN-2mm_orientOK ${PET_REC
 setenv MNI152_T1_2MM_BRAIN_NII ${FSL_DIR}/data/standard/MNI152_T1_2mm_brain.nii.gz
 
 # flirt freesurfer mprage (T1-2mm_skullstripped) to MNI, to obtain the T1_lin_MNI152.mat matrix
-flirt -ref T1-2mm_skullstripped_orientOK -in ${MNI152_T1_2MM_BRAIN_NII} -omat MNI152_lin_T1.mat 
+flirt -ref T1-2mm_skullstripped_orientOK -in ${MNI152_T1_2MM_BRAIN_NII} -omat MNI152_lin_T1.mat
 convert_xfm -omat T1_lin_MNI152.mat -inverse MNI152_lin_T1.mat
 
 # Apply non-linear registration of T1 to MNI
