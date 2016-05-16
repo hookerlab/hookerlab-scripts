@@ -79,9 +79,9 @@ PET_RECON=$(basename $1)
 PET_RECON=$(echo ${PET_RECON%.nii})
 
 # Check whether you have FSL installed and find out where
-if [-z ${FSL_DIR+x}]; then
+if [ -z ${FSL_DIR+x} ]; then
     FSL_BIN=$(which fsl)
-    if [-z ${FSL_BIN+x}]; then
+    if [ -z ${FSL_BIN+x} ]; then
         echo "Cannot find a FSL installation: you need to install it."
         exit 1
     fi
@@ -154,7 +154,7 @@ fslreorient2std ${PET_RECON}.lin_T1 ${PET_RECON}.lin_T1_orientOK
 fslmaths ${PET_RECON}.lin_T1_orientOK -mas aparc+aseg_BIN-2mm_orientOK ${PET_RECON}.lin_T1_orientOK_skullstripped
 
 # Find the input file for flirt
-setenv MNI152_T1_2MM_BRAIN_NII ${FSL_DIR}/data/standard/MNI152_T1_2mm_brain.nii.gz
+MNI152_T1_2MM_BRAIN_NII=${FSL_DIR}/data/standard/MNI152_T1_2mm_brain.nii.gz
 
 # flirt freesurfer mprage (T1-2mm_skullstripped) to MNI, to obtain the T1_lin_MNI152.mat matrix
 flirt -ref T1-2mm_skullstripped_orientOK -in ${MNI152_T1_2MM_BRAIN_NII} -omat MNI152_lin_T1.mat
